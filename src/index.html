@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación Web Responsiva</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="header-flex">
+        <img src="assets/logos/logo.png" alt="Logo de la tienda">
+        <div class="header-content">
+            <h1 id="titulo-principal">Bienvenido a la Aplicación Web Responsiva</h1>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">&#9776;</button>
+            <nav id="mainNav" class="nav-collapsible">
+                <ul>
+                    <li><a href="#home">Inicio</a></li>
+                    <li><a href="#about">Acerca de</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="home">
+            <h2>Inicio</h2>
+            <div class="carousel" id="carousel">
+                <button class="carousel-btn prev" id="prevBtn">&#10094;</button>
+                <div class="carousel-images">
+                    <img src="assets/images/slide1.png" alt="Imagen 1" class="active">
+                    <img src="assets/images/slide2.png" alt="Imagen 2">
+                    <img src="assets/images/slide3.png" alt="Imagen 3">
+                </div>
+                <button class="carousel-btn next" id="nextBtn">&#10095;</button>
+            </div>
+            <p id="texto-inicio">Bienvenido a nuestra tienda en línea. Descubre productos increíbles y ofertas exclusivas cada semana.</p>
+        </section>
+        <section id="about">
+            <h2>Acerca de</h2>
+            <p id="texto-about">Somos una tienda comprometida con la calidad y el servicio. Más de 10 años ofreciendo lo mejor a nuestros clientes.</p>
+        </section>
+        <section id="contact">
+            <h2>Contacto</h2>
+            <form id="contact-form">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="mensaje">Mensaje:</label>
+                <textarea id="mensaje" name="mensaje" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+            <p id="contact-status"></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; <span id="currentYear"></span> Aplicación Web Responsiva. Todos los derechos reservados.</p>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Carrusel
+    const images = document.querySelectorAll('.carousel-images img');
+    let current = 0;
+
+    function showImage(index) {
+        images.forEach((img, i) => {
+            img.classList.toggle('active', i === index);
+        });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        current = (current - 1 + images.length) % images.length;
+        showImage(current);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        current = (current + 1) % images.length;
+        showImage(current);
+    });
+
+    setInterval(() => {
+        current = (current + 1) % images.length;
+        showImage(current);
+    }, 5000);
+
+    // Cargar textos desde archivos planos
+    fetch('content/textos/inicio.txt')
+        .then(res => res.text())
+        .then(text => document.getElementById('texto-inicio').textContent = text);
+
+    fetch('content/textos/about.txt')
+        .then(res => res.text())
+        .then(text => document.getElementById('texto-about').textContent = text);
+
+    fetch('content/textos/contact.txt')
+        .then(res => res.text())
+        .then(text => document.getElementById('texto-contact').textContent = text);
+
+    // Cargar título principal desde archivo plano
+    fetch('content/textos/title.txt')
+        .then(res => res.text())
+        .then(text => document.getElementById('titulo-principal').textContent = text);
+
+    // Menú hamburguesa (debe estar aquí dentro)
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    menuToggle.addEventListener('click', () => {
+        mainNav.classList.toggle('open');
+    });
+
+    // Mostrar año actual en el pie de página
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</body>
+</html>
